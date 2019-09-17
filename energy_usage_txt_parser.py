@@ -3,9 +3,13 @@ import re
 NEWLINE = 'XXX_NEW_LINE_XXX'
 TITLE = 'AB Stora Tunabyggen'
 PAGE_NUM = '2019-02-07Sida (\d+) av (\d+)'
-ADDRESS = '.+\(.+\)'
-MONTH_LINE = '(\d+)2018 ([a-z]{3})'
+ADDRESS = '.+\(Byggnad \)'
+# MONTH_LINE = '(\d+)2018 ([a-z]{3})'
+MONTH_LINE = '((?:\d+ )?\d+)2018 ([a-z]{3})'
 MONTH_LINE_2 = '(\d+)2018 ([a-z]{3})(\d+)2018 ([a-z]{3}.*)'
+TOTAL_LINE = '((?:\d+ )?\d+)Totalt'
+
+
 page_list = []
 
 def pre_process(page):
@@ -46,7 +50,12 @@ def parse_page(page):
             month = match.group(2)
             num = match.group(1)
             
-            print ("MONTH_LINE:\t\t", month, num, '\t\t', line)
+            print ("MONTH_LINE:\t\t", month, '\t', num)
+            pass
+        elif re.match(TOTAL_LINE, line) : 
+            match = re.match(TOTAL_LINE, line)
+            num = match.group(1)
+            print("TOTAL_LINE:\t\t\t", num)
             pass
         else :
             print ('#NO MATCH', line)
