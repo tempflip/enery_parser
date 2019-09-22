@@ -36,8 +36,11 @@ with open(PATH) as f:
             if (len(row[0]) > 10) :
                 date_line = row[0].split('\n')
                 num_line = row[3].split('\n')
-                for j, dt in enumerate(date_line):
-                    print(page_num + ';' + 'CHECK ME' + ';' + address + ';' + dt + ';' + num_line[j])
+                try :
+                    for j, dt in enumerate(date_line):
+                        print(page_num + ';;' + 'EXTRA_PARSING' + ';' + address + ';' + dt + ';' + num_line[j])
+                except IndexError:
+                    pass
                 pass
             else :
                 print(page_num + ';' + ';' + key + ';' + address + ';', end = '')
