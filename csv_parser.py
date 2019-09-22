@@ -30,6 +30,18 @@ with open(PATH) as f:
             address = addr_by_key[key][1]
         
         if re.match(DATE_LINE, row[0]):
-            print(page_num, '\t', address, '\t'.join(row))
+            # print(row)
+            # if re.match('\n', row[0], re.MULTILINE):
+            # print(row[0])
+            if (len(row[0]) > 10) :
+                date_line = row[0].split('\n')
+                num_line = row[3].split('\n')
+                for j, dt in enumerate(date_line):
+                    print(page_num + ';' + 'CHECK ME' + ';' + address + ';' + dt + ';' + num_line[j])
+                pass
+            else :
+                print(page_num + ';' + ';' + key + ';' + address + ';', end = '')
+                print(';'.join(row))
+                pass
         i+= 1
-        if (i > 1000): exit()
+        # if (i > 200): exit()
