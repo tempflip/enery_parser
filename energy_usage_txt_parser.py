@@ -3,7 +3,7 @@ import re
 NEWLINE = 'XXX_NEW_LINE_XXX'
 TITLE = 'AB Stora Tunabyggen'
 PAGE_NUM = '2019-02-07Sida (\d+) av (\d+)'
-ADDRESS = '.+\(Byggnad \)'
+ADDRESS = '.+\((Utrymme|Fastighet|Byggnad )\)'
 ADDRESS_FURTHER = '(\d+-\d+: \d+) +(.+)  \(Byggnad'
 # MONTH_LINE = '(\d+)2018 ([a-z]{3})'
 MONTH_LINE = '((?:\d+ )?\d+)2018 ([a-z]{3})'
@@ -14,15 +14,18 @@ METRIC_M3 = 'm3Period'
 METRIC_MWH = 'MWh'
 METRIC_KWH = 'kWhPeriod'
 
+ANL = "(\d+ \(anl\))"
 
 class ParsedPage:
     page_num = None
-    address = None
+    address = 'NONE'
     total = None
     month_map = {}
     metric = None
     adr_key = None
     month_ord = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep','okt', 'nov', 'dec']
+    anl = None
+    anl2 = None
 
     def __init__(self, page_lines):
         for line in page_lines:
@@ -35,12 +38,13 @@ class ParsedPage:
             self.page_num = re.match(PAGE_NUM, line).group(1)
             pass
         elif re.match(ADDRESS, line) : 
-            if re.match(ADDRESS_FURTHER, line):
-                match = re.match(ADDRESS_FURTHER, line)
-                self.adr_key = match.group(1)
-                self.address = match.group(2)
-            else : 
-                self.address = 'CANT PARSE : ' + line
+            self.address = line
+            # if re.match(ADDRESS_FURTHER, line):
+                # match = re.match(ADDRESS_FURTHER, line)
+                # self.adr_key = match.group(1)
+                # self.address = match.group(2).strip()
+            # else : 
+                # self.address = 'CANT PARSE : ' + line
             pass
         elif re.match(MONTH_LINE, line) : 
             match = re.match(MONTH_LINE, line)
@@ -60,26 +64,35 @@ class ParsedPage:
         # elif re.match(METRIC_MWH, line) : 
             # self.metric = 'mwh'
             # print ("## METRIC\t\t mwh")
+        elif re.match(ANL, line):
+            if self.anl == None :
+                self.anl = re.match(ANL, line).group(1)
+            else :
+                self.anl2 = re.match(ANL, line).group(1)
+
         else :
             # print ('#NO MATCH', line)
             pass
 
     
     def print(self):
-        print('PAGE NUM\t\t', self.page_num)
+        # print('PAGE NUM\t\t', self.page_num)
+        # print('ADDRESS\t\t', self.address)
+        # print('ANL\t\t', self.anl)
+        print(self.page_num + "\t" + self.anl + "\t" + self.address.strip().strip())
+        if (self.anl2 != None):
+            print(self.page_num + "\t" + self.anl2 + "\t" + self.address.strip().strip())
+        # if self.metric != 'kwh':
+        #     print ('PAGE CONTAINS NO kwh data')
+        #     return
 
-        if self.metric != 'kwh':
-            print ('PAGE CONTAINS NO kwh data')
-            return
-
-        print('ADDRESS KEY\t\t', self.adr_key)
-        print('ADDRESS\t\t', self.address)
-        print('TOTAL\t\t', self.total)
-        print('METRIC\t\t', self.metric)
-        # print('month_map\t\t', self.month_map)
-        for month_key in self.month_ord:
-            if month_key not in self.month_map : continue
-            print(month_key, '\t\t', self.month_map[month_key])
+        # print('ADDRESS KEY\t\t', self.adr_key)
+        # print('TOTAL\t\t', self.total)
+        # print('METRIC\t\t', self.metric)
+        # # print('month_map\t\t', self.month_map)
+        # for month_key in self.month_ord:
+        #     if month_key not in self.month_map : continue
+        #     print(month_key, '\t\t', self.month_map[month_key])
 
 def pre_process(page):
     pp = page
@@ -115,7 +128,7 @@ with open("energy_usage.txt", "r") as f:
             ll.append(line)
 
 ### parse individual pages
-for page in page_list[0:100]:
+for page in page_list:
     p = ParsedPage(page)
     p.print()
-    print ("...........................................")
+    # print ("...........................................")

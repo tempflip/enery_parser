@@ -11,4 +11,4 @@ with open("energy_usage.pdf", "rb") as f:
         print (page.extractText())
         print ('XXX_NEW_LINE_XXX')
         i+= 1
-        if i == 100 : exit()
+        # if i == 10000000 : exit()
