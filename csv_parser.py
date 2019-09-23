@@ -30,7 +30,7 @@ def parse_num(s):
         return None
 
 def add(s):
-    AD = '(\d+-\d+:|\d+|\d+: \d+|) ?(.+)\((Byggnad|Utrymme|Fastighet)'
+    AD = '(\d+-\d+: \d+|\d+|\d+: \d+|) ?(.+)\((Byggnad|Utrymme|Fastighet)'
     match = re.match(AD, s)
     if match:
         # print(match.group(1), match.group(2), match.group(3))
