@@ -58,10 +58,14 @@ with open(PATH) as f:
                 num_line = row[3].split('\n')
                 try :
                     for j, dt in enumerate(date_line):
-                        num = num_line[j]
+                        num = parse_num(num_line[j])
                         print(page_num + ';' + metric +';;' + 'EXTRA_PARSING' + ';' + nm + ';' + typ + ';' + adr + ';' + dt + ';' + num)
                 except IndexError:
                     pass
+                except TypeError:
+                    pass
+
+
                 pass
             else :
                 dt = row[0].lower()
